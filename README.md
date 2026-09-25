@@ -5,7 +5,8 @@ Minimal reproducer for `@tanstack/react-router` 1.170.39 (`@tanstack/history` 1.
 A plain `<a href="#fragment">` makes the browser create a same-document history
 entry without router state. `parseHref` gives it `__TSR_index: 0`, so the delta
 of any traversal across it is wrong, and undoing a blocked traversal
-(`history.go(-delta)`) lands on the wrong entry or reloads the page.
+(`history.go(-delta)`) lands on the wrong entry, or calls `go(0)` and leaves the
+refused traversal in place.
 
 ## Run
 
