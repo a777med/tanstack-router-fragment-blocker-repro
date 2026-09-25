@@ -14,12 +14,18 @@ npm install
 npm run dev
 ```
 
-1. Click **Add history entry** (Step 1), then **Plain fragment link** (`/?step=1#fragment`).
-2. Type in **Draft**.
-3. Click **History back**, then **Stay here**: the app ends up on a different
-   entry instead of staying on `/?step=1#fragment`.
-4. Repeat from step 1 with **History go(-2)**, then **Stay here**: the page
-   reloads (`go(0)`), with the native "Leave site?" dialog, and the draft is lost.
+1. Click **Add history entry** (Step 1), then **Plain fragment link**. History is now
+   `/?step=0` → `/?step=1` → `/?step=1#fragment`, the last entry created by the browser.
+2. Type in **Draft** (the blocker is now active).
+3. Click **History back** (or **History go(-2)**), then **Stay here**.
+
+Actual: the app is left on `/?step=0` (Step 0) in both cases.
+
+- **back** reaches `/?step=1` (index 1) from the fragment entry (read as index 0),
+  so the delta is +1: it is reported as `FORWARD`, and the blocked traversal is
+  "undone" with `go(-1)`, one entry further back.
+- **go(-2)** reaches `/?step=0` (index 0) from the fragment entry (index 0), so
+  the delta is 0 and the undo is `go(0)`: the refused traversal stands.
 
 Expected: after **Stay here**, the URL stays `/?step=1#fragment` and the draft is kept.
 
